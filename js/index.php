@@ -76,23 +76,27 @@
 <!--js代码-->
 <script type="text/javascript">
     $(function () {
-        var win_height=$(document).height();
-        $(window).scroll(function () {
-            //获得元素距离浏览器顶部的距离
-            var footer_top=$('.footer-box').offset().top;
-            if(footer_top>win_height-55){
-                console.log(1);
-                $('.footer-box').css({'position':'relative','margin_top':'0px'})
-            }else{
-                console.log(0);
-                $('.footer-box').css({'position':'fixed','bottom':'0px','left':'0px'});
-            }
-        })
+        var url=window.location.href;
+        if(url.indexOf('person')>=0){
+            $('.footer-box').find('.footer-tab').eq(0).addClass('active');
+        }else if(url.indexOf('customer')>=0){
+            $('.footer-box').find('.footer-tab').eq(1).addClass('active');
+        }else if(url.indexOf('join')>=0){
+            $('.footer-box').find('.footer-tab').eq(2).addClass('active');
+        }else if(url.indexOf('contract')>=0){
+            $('.footer-box').find('.footer-tab').eq(3).addClass('active');
+        }else if(url.indexOf('my')>=0){
+            $('.footer-box').find('.footer-tab').eq(4).addClass('active');
+        }
     })
 </script>
 <!--js代码结束-->
 <!--css代码-->
 <style>
+    .footer-top{
+        height:55px;
+        width: 100%;
+    }
     .footer-box{
         width: 100%;
         height: 50px;
@@ -126,6 +130,7 @@
 <!--css代码结束-->
 <!--html-->
 <html>
+<div class="footer-top"></div>
 <div class="footer-box">
     <div onclick="location.href='../person/'" class="footer-tab">
         <div class="footer-img"><i class="fa fa-user-circle-o"></i></div>
@@ -151,3 +156,56 @@
 </html>
 <!--html结束-->
 <!--顶部菜单固定-->
+
+<!--一键复制-->
+<!--js代码-->
+<script src="./clipboard.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var clipboard = new Clipboard('.share');
+        clipboard.on('success', function(e) {
+            console.log(e);
+            $('.notice').fadeIn(2000,function () {
+                setTimeout(function () {
+                    $('.notice').fadeOut(200);
+                },2000)
+            })
+        });
+        clipboard.on('error', function(e) {
+            console.log(e);
+            alert('复制失败！');
+        });
+    })
+</script>
+<!--js代码结束-->
+<!--css代码-->
+<style>
+    .notice{
+        position: absolute;
+        right: 2%;
+        bottom: 2px;
+        background: #000000;
+        opacity: 0.8;
+        border-radius: 3px;
+        color: #444;
+        padding: 3px 5px;
+        display: none;
+    }
+</style>
+<!--css代码结束-->
+<!--html-->
+<html>
+<li class="li-box share" data-clipboard-text="http://zc36524.com/jzy/tpl/person/store.php?uid=<?php echo $_SESSION['uid'] ?>">
+    <div class="img-box">
+        <img src="../register/jundaologo.png" />
+    </div>
+    <div class="title">
+        转发添加家政员
+    </div>
+    <div class="notice">
+        已复制到剪切板！
+    </div>
+</li>
+</html>
+<!--html结束-->
+<!--一键复制结束-->
