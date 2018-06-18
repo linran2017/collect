@@ -43,7 +43,7 @@ if(isset($_GET['jgj'])){
 $_SESSION['d_id']=$_GET['id'];
 $_SESSION['jgj']=isset($_GET['jgj'])?$_GET['jgj']:'';
 if(empty($_SESSION['user_id'])||$_SESSION['user_id']==0){
-//跳转页面获取微信信息
+//跳转页面获取微信用户信息
     ?>
 
     <div class="bm-btn-box" onClick="location.href='../wechat_login.php?is=1-customer/detail'">
