@@ -1,5 +1,5 @@
 ﻿<?php
-/*判断用户是手机端访问还是PC端访问*/
+/*判断当前用户是手机端访问还是PC端访问*/
 function CheckSubstrs($substrs,$text){
     foreach($substrs as $substr)
         if(false!==strpos($text,$substr)){
