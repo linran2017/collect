@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /*判断用户是手机端访问还是PC端访问*/
 function CheckSubstrs($substrs,$text){
     foreach($substrs as $substr)
@@ -25,7 +25,7 @@ function isMobile(){
 }
 /*判断用户是手机端访问还是PC端访问结束*/
 
-/*自动获取微信信息*/
+/*自动获取微信用户的信息*/
 //首先获取地址参数
 if(empty($_GET['id'])){
     $id=$_SESSION['d_id'];//注意找合适的位置清除这两个session
@@ -154,5 +154,5 @@ if(empty($_SESSION['user_id'])||$_SESSION['user_id']==0){
     }
 
 
-    /*自动获取微信信息*/
+    /*自动获取微信用户信息结束*/
 ?>
