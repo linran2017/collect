@@ -126,7 +126,7 @@ if(empty($_SESSION['user_id'])||$_SESSION['user_id']==0){
         return mysql_insert_id();
     }
     function isUser($openid){
-        $uid;
+        //$uid;
         if(!empty($openid)){
             $sql="select user_id  from ecs_users where open_id='$openid'";
             $re=getAll($sql);
@@ -155,4 +155,132 @@ if(empty($_SESSION['user_id'])||$_SESSION['user_id']==0){
 
 
     /*自动获取微信用户信息结束*/
+
+    /*发送微信消息*/
+    function wechat_msg($title,$web_url,$des,$pic_url,$openid){
+        $appid = "wxb73e999933c6b6cb";
+        $secret = "2695d4d298a2e5dab8a9c3eeac1db8dd";
+        $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=$appid&secret=$secret";
+        $access_token=getJson($url);
+        $a_token= $access_token['access_token'];
+//发送消息
+        $url = 'https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token='.$a_token;
+
+        $w_title=$title;
+        $w_url=$web_url;
+        $w_description=$des;
+        $w_picurl=$pic_url;
+        $post_msg = '{
+	"touser":"'.$openid.'",
+	"msgtype":"news",
+	"news":{
+	"articles": [
+	{
+	"title":"'.$w_title.'",
+	"description":"'.$w_description.'",
+	"url":"'.$w_url.'",
+	"picurl":"'.$w_picurl.'"
+	}
+	]
+	}
+	}';
+        //p($post_msg);
+        $ret_json = curl_grab_page($url,$post_msg);
+        $ret = json_encode($ret_json);
+        //p($ret);exit();
+        $a=array("id"=>1);
+        /*    if($ret->errmsg != 'ok')
+            {
+                $url = 'https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token='.$a_token;
+                $ret_json = curl_grab_page($url,$post_msg);
+                $ret = json_decode($ret_json);
+                if($ret->errmsg == 'ok')
+                {
+                    $a=array("id"=>1);
+                }
+            }*/
+
+        //echo json_encode($a);
+    }
+    /*
+    function ch_json_encode($data) {
+        $ret = ch_urlencode($data);
+        $ret = json_encode($ret);
+        return urldecode($ret);
+    }
+
+    function ch_urlencode($data) {
+        if (is_array($data) || is_object($data)) {
+            foreach ($data as $k => $v) {
+                if (is_scalar($v)) {
+                    if (is_array($data)) {
+                        $data[$k] = urlencode($v);
+                    } else if (is_object($data)) {
+                        $data->$k = urlencode($v);
+                    }
+                } else if (is_array($data)) {
+                    $data[$k] = ch_urlencode($v); //递归调用该函数
+                } else if (is_object($data)) {
+                    $data->$k = ch_urlencode($v);
+                }
+            }
+        }
+        return $data;
+    }*/
+
+    function getJson($url){
+        $ch = curl_init();
+        curl_setopt($ch,CURLOPT_URL,$url);
+        curl_setopt($ch,CURLOPT_HEADER,0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0); //SSL
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); //SSL
+        $res = curl_exec($ch);
+        curl_close($ch);
+        return json_decode($res,true);
+
+    }
+    function get_access_token($url){
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        return json_decode($output, true);
+    }
+
+    function curl_grab_page($url, $data, $proxy = '', $proxystatus = '', $ref_url = '') {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");
+        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        if ($proxystatus == 'true') {
+            curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, true);
+            curl_setopt($ch, CURLOPT_PROXY, $proxy);
+        }
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        if (!empty($ref_url)) {
+            curl_setopt($ch, CURLOPT_HEADER, true);
+            curl_setopt($ch, CURLOPT_REFERER, $ref_url);
+        }
+        if (defined('CURLOPT_IPRESOLVE') && defined('CURL_IPRESOLVE_V4')) {
+            curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+        }
+        curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        ob_start();
+        return curl_exec ($ch);
+        ob_end_clean();
+        curl_close ($ch);
+        unset($ch);
+    }
+
+    /*发送微信消息结束*/
 ?>
