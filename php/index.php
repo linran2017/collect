@@ -283,4 +283,50 @@ if(empty($_SESSION['user_id'])||$_SESSION['user_id']==0){
     }
 
     /*发送微信消息结束*/
+
+    /*php4.5以下json_encode不转义，不编码方法*/
+    function json_encode_ex($var) {
+        if ($var === null)
+            return 'null';
+        if ($var === true)
+            return 'true';
+
+        if ($var === false)
+            return 'false';
+
+        static $reps = array(
+            array("\\", "/", "\n", "\t", "\r", "\b", "\f", '"', ),
+            array('\\\\', '\\/', '\\n', '\\t', '\\r', '\\b', '\\f', '\"', ),
+        );
+
+        if (is_scalar($var))
+            return '"' . str_replace($reps[0], $reps[1], (string) $var) . '"';
+
+        if (!is_array($var))
+            throw new Exception('JSON encoder error!');
+
+        $isMap = false;
+        $i = 0;
+        foreach (array_keys($var) as $k) {
+            if (!is_int($k) || $i++ != $k) {
+                $isMap = true;
+                break;
+            }
+        }
+
+        $s = array();
+
+        if ($isMap) {
+            foreach ($var as $k => $v)
+                $s[] = '"' . $k . '":' . call_user_func(__FUNCTION__, $v);
+
+            return '{' . implode(',', $s) . '}';
+        } else {
+            foreach ($var as $v)
+                $s[] = call_user_func(__FUNCTION__, $v);
+
+            return '[' . implode(',', $s) . ']';
+        }
+    }
+    /*php4.5以下json_encode不转义，不编码方法结束*/
 ?>
