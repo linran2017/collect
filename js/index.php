@@ -245,3 +245,17 @@
 =======
 <!--一键复制结束-->
 >>>>>>> 5119e7412cb29ceec1304bdb128cc8a9167507d4
+
+<!--判断是否是微信访问-->
+<script type="text/javascript">
+    function is_weixin() {
+        var ua = window.navigator.userAgent.toLowerCase();
+        if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+            //   alert("微信浏览器");
+        } else {
+            //alert("不是微信浏览器");
+        }
+    }
+    is_weixin();
+</script>
+<!--判断是否是微信访问结束-->

@@ -149,28 +149,26 @@ if(empty($_SESSION['user_id'])||$_SESSION['user_id']==0){
     }
 
     function verify_access_token(){
-
-
     }
+}
+/*自动获取微信用户信息结束*/
 
 
-    /*自动获取微信用户信息结束*/
-
-    /*发送微信消息*/
-    function wechat_msg($title,$web_url,$des,$pic_url,$openid){
-        $appid = "wxb73e999933c6b6cb";
-        $secret = "2695d4d298a2e5dab8a9c3eeac1db8dd";
-        $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=$appid&secret=$secret";
-        $access_token=getJson($url);
-        $a_token= $access_token['access_token'];
+/*发送微信消息*/
+function wechat_msg($title,$web_url,$des,$pic_url,$openid){
+    $appid = "wxb73e999933c6b6cb";
+    $secret = "2695d4d298a2e5dab8a9c3eeac1db8dd";
+    $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=$appid&secret=$secret";
+    $access_token=getJson($url);
+    $a_token= $access_token['access_token'];
 //发送消息
-        $url = 'https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token='.$a_token;
+    $url = 'https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token='.$a_token;
 
-        $w_title=$title;
-        $w_url=$web_url;
-        $w_description=$des;
-        $w_picurl=$pic_url;
-        $post_msg = '{
+    $w_title=$title;
+    $w_url=$web_url;
+    $w_description=$des;
+    $w_picurl=$pic_url;
+    $post_msg = '{
 	"touser":"'.$openid.'",
 	"msgtype":"news",
 	"news":{
@@ -184,149 +182,163 @@ if(empty($_SESSION['user_id'])||$_SESSION['user_id']==0){
 	]
 	}
 	}';
-        //p($post_msg);
-        $ret_json = curl_grab_page($url,$post_msg);
-        $ret = json_encode($ret_json);
-        //p($ret);exit();
-        $a=array("id"=>1);
-        /*    if($ret->errmsg != 'ok')
+    //p($post_msg);
+    $ret_json = curl_grab_page($url,$post_msg);
+    $ret = json_encode($ret_json);
+    //p($ret);exit();
+    $a=array("id"=>1);
+    /*    if($ret->errmsg != 'ok')
+        {
+            $url = 'https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token='.$a_token;
+            $ret_json = curl_grab_page($url,$post_msg);
+            $ret = json_decode($ret_json);
+            if($ret->errmsg == 'ok')
             {
-                $url = 'https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token='.$a_token;
-                $ret_json = curl_grab_page($url,$post_msg);
-                $ret = json_decode($ret_json);
-                if($ret->errmsg == 'ok')
-                {
-                    $a=array("id"=>1);
-                }
-            }*/
+                $a=array("id"=>1);
+            }
+        }*/
 
-        //echo json_encode($a);
-    }
-    /*
-    function ch_json_encode($data) {
-        $ret = ch_urlencode($data);
-        $ret = json_encode($ret);
-        return urldecode($ret);
-    }
+    //echo json_encode($a);
+}
+/*
+function ch_json_encode($data) {
+    $ret = ch_urlencode($data);
+    $ret = json_encode($ret);
+    return urldecode($ret);
+}
 
-    function ch_urlencode($data) {
-        if (is_array($data) || is_object($data)) {
-            foreach ($data as $k => $v) {
-                if (is_scalar($v)) {
-                    if (is_array($data)) {
-                        $data[$k] = urlencode($v);
-                    } else if (is_object($data)) {
-                        $data->$k = urlencode($v);
-                    }
-                } else if (is_array($data)) {
-                    $data[$k] = ch_urlencode($v); //递归调用该函数
+function ch_urlencode($data) {
+    if (is_array($data) || is_object($data)) {
+        foreach ($data as $k => $v) {
+            if (is_scalar($v)) {
+                if (is_array($data)) {
+                    $data[$k] = urlencode($v);
                 } else if (is_object($data)) {
-                    $data->$k = ch_urlencode($v);
+                    $data->$k = urlencode($v);
                 }
+            } else if (is_array($data)) {
+                $data[$k] = ch_urlencode($v); //递归调用该函数
+            } else if (is_object($data)) {
+                $data->$k = ch_urlencode($v);
             }
         }
-        return $data;
-    }*/
-
-    function getJson($url){
-        $ch = curl_init();
-        curl_setopt($ch,CURLOPT_URL,$url);
-        curl_setopt($ch,CURLOPT_HEADER,0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0); //SSL
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); //SSL
-        $res = curl_exec($ch);
-        curl_close($ch);
-        return json_decode($res,true);
-
     }
-    function get_access_token($url){
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $output = curl_exec($ch);
-        curl_close($ch);
-        return json_decode($output, true);
+    return $data;
+}*/
+
+function getJson($url){
+    $ch = curl_init();
+    curl_setopt($ch,CURLOPT_URL,$url);
+    curl_setopt($ch,CURLOPT_HEADER,0);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0); //SSL
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); //SSL
+    $res = curl_exec($ch);
+    curl_close($ch);
+    return json_decode($res,true);
+
+}
+function get_access_token($url){
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $output = curl_exec($ch);
+    curl_close($ch);
+    return json_decode($output, true);
+}
+
+function curl_grab_page($url, $data, $proxy = '', $proxystatus = '', $ref_url = '') {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");
+    curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    if ($proxystatus == 'true') {
+        curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, true);
+        curl_setopt($ch, CURLOPT_PROXY, $proxy);
     }
-
-    function curl_grab_page($url, $data, $proxy = '', $proxystatus = '', $ref_url = '') {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");
-        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        if ($proxystatus == 'true') {
-            curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, true);
-            curl_setopt($ch, CURLOPT_PROXY, $proxy);
-        }
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        if (!empty($ref_url)) {
-            curl_setopt($ch, CURLOPT_HEADER, true);
-            curl_setopt($ch, CURLOPT_REFERER, $ref_url);
-        }
-        if (defined('CURLOPT_IPRESOLVE') && defined('CURL_IPRESOLVE_V4')) {
-            curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
-        }
-        curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        ob_start();
-        return curl_exec ($ch);
-        ob_end_clean();
-        curl_close ($ch);
-        unset($ch);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    if (!empty($ref_url)) {
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_REFERER, $ref_url);
     }
+    if (defined('CURLOPT_IPRESOLVE') && defined('CURL_IPRESOLVE_V4')) {
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+    }
+    curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    ob_start();
+    return curl_exec ($ch);
+    ob_end_clean();
+    curl_close ($ch);
+    unset($ch);
+}
+/*发送微信消息结束*/
 
-    /*发送微信消息结束*/
+/*php4.5以下json_encode不转义，不编码方法*/
+function json_encode_ex($var) {
+    if ($var === null)
+        return 'null';
+    if ($var === true)
+        return 'true';
 
-    /*php4.5以下json_encode不转义，不编码方法*/
-    function json_encode_ex($var) {
-        if ($var === null)
-            return 'null';
-        if ($var === true)
-            return 'true';
+    if ($var === false)
+        return 'false';
 
-        if ($var === false)
-            return 'false';
+    static $reps = array(
+        array("\\", "/", "\n", "\t", "\r", "\b", "\f", '"', ),
+        array('\\\\', '\\/', '\\n', '\\t', '\\r', '\\b', '\\f', '\"', ),
+    );
 
-        static $reps = array(
-            array("\\", "/", "\n", "\t", "\r", "\b", "\f", '"', ),
-            array('\\\\', '\\/', '\\n', '\\t', '\\r', '\\b', '\\f', '\"', ),
-        );
+    if (is_scalar($var))
+        return '"' . str_replace($reps[0], $reps[1], (string) $var) . '"';
 
-        if (is_scalar($var))
-            return '"' . str_replace($reps[0], $reps[1], (string) $var) . '"';
+    if (!is_array($var))
+        throw new Exception('JSON encoder error!');
 
-        if (!is_array($var))
-            throw new Exception('JSON encoder error!');
-
-        $isMap = false;
-        $i = 0;
-        foreach (array_keys($var) as $k) {
-            if (!is_int($k) || $i++ != $k) {
-                $isMap = true;
-                break;
-            }
-        }
-
-        $s = array();
-
-        if ($isMap) {
-            foreach ($var as $k => $v)
-                $s[] = '"' . $k . '":' . call_user_func(__FUNCTION__, $v);
-
-            return '{' . implode(',', $s) . '}';
-        } else {
-            foreach ($var as $v)
-                $s[] = call_user_func(__FUNCTION__, $v);
-
-            return '[' . implode(',', $s) . ']';
+    $isMap = false;
+    $i = 0;
+    foreach (array_keys($var) as $k) {
+        if (!is_int($k) || $i++ != $k) {
+            $isMap = true;
+            break;
         }
     }
-    /*php4.5以下json_encode不转义，不编码方法结束*/
+
+    $s = array();
+
+    if ($isMap) {
+        foreach ($var as $k => $v)
+            $s[] = '"' . $k . '":' . call_user_func(__FUNCTION__, $v);
+
+        return '{' . implode(',', $s) . '}';
+    } else {
+        foreach ($var as $v)
+            $s[] = call_user_func(__FUNCTION__, $v);
+
+        return '[' . implode(',', $s) . ']';
+    }
+}
+/*php4.5以下json_encode不转义，不编码方法结束*/
+
+/*判断是否是微信浏览器访问*/
+function iswechat(){
+    $user_agent = $_SERVER['HTTP_USER_AGENT'];
+    if (strpos($user_agent, 'MicroMessenger') === false) {
+        // 非微信浏览器禁止浏览
+        //p('普通');
+        return false;
+    } else {
+        // 微信浏览器，允许访问
+        //p('微信');
+        return true;
+    }
+}
+/*判断是否是微信浏览器访问结束*/
 ?>
