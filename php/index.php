@@ -341,4 +341,13 @@ function iswechat(){
     }
 }
 /*判断是否是微信浏览器访问结束*/
+
+/*解决ajax跨域问题*/
+//php，后面可以加某个域名，*表示所有网站可以访问
+header("Access-Control-Allow-Origin: *");
+//html
+?>
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+<?php
+/*解决ajax跨域问题结束*/
 ?>
